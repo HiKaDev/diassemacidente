@@ -100,9 +100,9 @@
 <body>
     <div class="container">
         <h1>DIAS SEM ACIDENTES</h1>
-        <div class="timer" id="timer">0</div>
+        <div class="timer" id="timer">2</div>
         <div class="timer-detail" id="timer-detail">00:00:00</div>
-        <div class="record" id="record">Recorde: 0 dias</div>
+        <div class="record" id="record">RECORDE: 51 DIAS</div>
         <button onclick="resetTimer()">REGISTRAR ACIDENTE</button>
         <div class="history">
             <div class="history-title">HISTÓRICO DE PERÍODOS SEM ACIDENTES</div>
@@ -111,14 +111,30 @@
     </div>
 
     <script>
-        let startDate = localStorage.getItem('accidentFreeStartDate');
-        let record = parseInt(localStorage.getItem('record') || '0');
-        let history = JSON.parse(localStorage.getItem('history') || '[]');
-        
-        if (!startDate) {
-            startDate = new Date().toISOString();
-            localStorage.setItem('accidentFreeStartDate', startDate);
-        }
+        // Define o recorde inicial
+        let record = 51;
+        localStorage.setItem('record', record.toString());
+
+        // Calcula a data de início para ter exatamente 2 dias
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+        let startDate = twoDaysAgo.toISOString();
+        localStorage.setItem('accidentFreeStartDate', startDate);
+
+        // Inicializa o histórico
+        let history = [
+            {
+                start: new Date(new Date().setDate(new Date().getDate() - 53)).toISOString(),
+                end: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString(),
+                days: 51
+            },
+            {
+                start: startDate,
+                end: null,
+                days: 2
+            }
+        ];
+        localStorage.setItem('history', JSON.stringify(history));
 
         function padNumber(num) {
             return num.toString().padStart(2, '0');
@@ -131,13 +147,6 @@
             
             // Cálculo dos dias
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
-            // Atualiza o recorde se necessário
-            if (diffDays > record) {
-                record = diffDays;
-                localStorage.setItem('record', record.toString());
-                document.getElementById('record').textContent = `RECORDE: ${record} DIAS`;
-            }
             
             // Cálculo das horas, minutos e segundos restantes
             const remainingTime = diffTime % (1000 * 60 * 60 * 24);
@@ -160,10 +169,17 @@
                 
                 // Adiciona ao histórico
                 history.unshift({
+                    start: endDate.toISOString(),
+                    end: null,
+                    days: 0
+                });
+                
+                // Atualiza o último registro
+                history[1] = {
                     start: oldStart.toISOString(),
                     end: endDate.toISOString(),
                     days: daysWithoutAccident
-                });
+                };
                 
                 // Mantém apenas os últimos 10 registros
                 history = history.slice(0, 10);
@@ -184,7 +200,7 @@
             const historyElement = document.getElementById('history');
             historyElement.innerHTML = history.map(entry => {
                 const start = new Date(entry.start).toLocaleDateString('pt-BR');
-                const end = new Date(entry.end).toLocaleDateString('pt-BR');
+                const end = entry.end ? new Date(entry.end).toLocaleDateString('pt-BR') : 'Atual';
                 return `<div class="history-item">
                     ${entry.days} dias (${start} - ${end})
                 </div>`;
