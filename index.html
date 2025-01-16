@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dias Sem Acidentes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
+        /* [Previous styles remain the same] */
         body {
             margin: 0;
             padding: 0;
@@ -13,137 +15,184 @@
             align-items: center;
             justify-content: center;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #2ecc71;
+            background: linear-gradient(135deg, #1a5f7a 0%, #2ecc71 100%);
             color: white;
         }
 
         .container {
             text-align: center;
-            padding: 2rem;
-            max-width: 600px;
+            padding: 3rem;
+            max-width: 800px;
             width: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
         h1 {
-            font-size: 1.5rem;
-            font-weight: 400;
+            font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 2rem;
-            letter-spacing: 0.5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInDown 1s;
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 2rem 0;
+            animation: fadeInUp 1s;
+        }
+
+        .timer-block {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 15px;
+            min-width: 120px;
         }
 
         .timer {
-            font-size: 4rem;
-            margin: 1rem 0;
-            font-weight: 300;
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .timer-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            opacity: 0.9;
+            margin-top: 0.5rem;
         }
 
         .timer-detail {
-            font-size: 1.5rem;
+            font-size: 2rem;
             margin: 1rem 0;
             font-weight: 300;
-            opacity: 0.9;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
         }
 
         .record {
-            font-size: 1.2rem;
-            margin: 1rem 0;
-            padding: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
+            font-size: 1.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(46, 204, 113, 0.2);
+            animation: fadeIn 1s;
         }
 
         button {
-            background: none;
-            border: 2px solid white;
+            background: rgba(255, 59, 48, 0.9);
+            border: none;
             color: white;
-            padding: 0.8rem 1.5rem;
-            font-size: 1rem;
-            border-radius: 3px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 1rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         button:hover {
-            background-color: white;
-            color: #2ecc71;
+            background: rgba(255, 59, 48, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .history {
-            margin-top: 2rem;
+            margin-top: 3rem;
             text-align: left;
-            font-size: 0.9rem;
-            opacity: 0.8;
         }
 
         .history-title {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .history-list {
-            max-height: 150px;
+            max-height: 200px;
             overflow-y: auto;
-            padding: 0.5rem;
+            padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.1);
         }
 
         .history-item {
-            margin: 0.5rem 0;
-            padding: 0.5rem;
+            margin: 0.8rem 0;
+            padding: 0.8rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>DIAS SEM ACIDENTES</h1>
-        <div class="timer" id="timer">2</div>
+        <h1>Dias Sem Acidentes</h1>
+        <div class="timer-container">
+            <div class="timer-block">
+                <div class="timer" id="timer">16</div>
+                <div class="timer-label">Dias</div>
+            </div>
+        </div>
         <div class="timer-detail" id="timer-detail">00:00:00</div>
         <div class="record" id="record">RECORDE: 51 DIAS</div>
-        <button onclick="resetTimer()">REGISTRAR ACIDENTE</button>
+        <button onclick="resetTimer()" class="animate__animated animate__pulse animate__infinite">REGISTRAR ACIDENTE</button>
         <div class="history">
-            <div class="history-title">HISTÓRICO DE PERÍODOS SEM ACIDENTES</div>
+            <div class="history-title">Histórico de Períodos Sem Acidentes</div>
             <div class="history-list" id="history"></div>
         </div>
     </div>
 
     <script>
-        // Define o recorde inicial
+        // Define o recorde e o número atual de dias
         let record = 51;
-        localStorage.setItem('record', record.toString());
-
-        // Calcula a data de início para ter exatamente 2 dias
-        const twoDaysAgo = new Date();
-        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-        let startDate = twoDaysAgo.toISOString();
-        localStorage.setItem('accidentFreeStartDate', startDate);
-
+        
+        // Calcula a data de início (16 dias atrás)
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - 16);
+        
         // Inicializa o histórico
         let history = [
             {
-                start: new Date(new Date().setDate(new Date().getDate() - 53)).toISOString(),
-                end: new Date(new Date().setDate(new Date().getDate() - 2)).toISOString(),
-                days: 51
-            },
-            {
-                start: startDate,
+                start: startDate.toISOString(),
                 end: null,
-                days: 2
+                days: 16
             }
         ];
-        localStorage.setItem('history', JSON.stringify(history));
 
         function padNumber(num) {
             return num.toString().padStart(2, '0');
         }
 
         function updateTimer() {
-            const start = new Date(startDate);
             const now = new Date();
-            const diffTime = Math.abs(now - start);
+            const diffTime = Math.abs(now - startDate);
             
             // Cálculo dos dias
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -154,42 +203,52 @@
             const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
             
-            // Atualiza os displays
-            document.getElementById('timer').textContent = diffDays;
+            // Atualiza os displays com animação
+            const timerElement = document.getElementById('timer');
+            if (timerElement.textContent !== diffDays.toString()) {
+                timerElement.classList.add('animate__animated', 'animate__bounceIn');
+                setTimeout(() => {
+                    timerElement.classList.remove('animate__animated', 'animate__bounceIn');
+                }, 1000);
+            }
+            timerElement.textContent = diffDays;
+            
             document.getElementById('timer-detail').textContent = 
                 `${padNumber(hours)}:${padNumber(minutes)}:${padNumber(seconds)}`;
             document.getElementById('record').textContent = `RECORDE: ${record} DIAS`;
+
+            // Atualiza o número de dias no histórico atual
+            if (history[0].end === null) {
+                history[0].days = diffDays;
+            }
         }
 
         function resetTimer() {
             if (confirm('Confirmar registro de acidente?')) {
-                const oldStart = new Date(startDate);
                 const endDate = new Date();
-                const daysWithoutAccident = Math.floor((endDate - oldStart) / (1000 * 60 * 60 * 24));
+                const daysWithoutAccident = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
                 
-                // Adiciona ao histórico
+                // Atualiza o último período
+                history[0].end = endDate.toISOString();
+                history[0].days = daysWithoutAccident;
+                
+                // Adiciona novo período
                 history.unshift({
                     start: endDate.toISOString(),
                     end: null,
                     days: 0
                 });
                 
-                // Atualiza o último registro
-                history[1] = {
-                    start: oldStart.toISOString(),
-                    end: endDate.toISOString(),
-                    days: daysWithoutAccident
-                };
+                // Atualiza o recorde se necessário
+                if (daysWithoutAccident > record) {
+                    record = daysWithoutAccident;
+                }
                 
                 // Mantém apenas os últimos 10 registros
                 history = history.slice(0, 10);
                 
-                // Salva o histórico
-                localStorage.setItem('history', JSON.stringify(history));
-                
-                // Atualiza a data de início
-                startDate = new Date().toISOString();
-                localStorage.setItem('accidentFreeStartDate', startDate);
+                // Atualiza a data de início para agora
+                startDate.setTime(endDate.getTime());
                 
                 updateTimer();
                 updateHistory();
@@ -201,7 +260,7 @@
             historyElement.innerHTML = history.map(entry => {
                 const start = new Date(entry.start).toLocaleDateString('pt-BR');
                 const end = entry.end ? new Date(entry.end).toLocaleDateString('pt-BR') : 'Atual';
-                return `<div class="history-item">
+                return `<div class="history-item animate__animated animate__fadeIn">
                     ${entry.days} dias (${start} - ${end})
                 </div>`;
             }).join('');
