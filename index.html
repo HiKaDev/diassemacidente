@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+<!-- [Previous head and styles remain exactly the same] -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dias Sem Acidentes</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
-        /* [Previous styles remain the same] */
+        /* [Previous styles remain exactly the same] */
         body {
             margin: 0;
             padding: 0;
@@ -156,12 +157,12 @@
         <h1>Dias Sem Acidentes</h1>
         <div class="timer-container">
             <div class="timer-block">
-                <div class="timer" id="timer">16</div>
+                <div class="timer" id="timer">3</div>
                 <div class="timer-label">Dias</div>
             </div>
         </div>
         <div class="timer-detail" id="timer-detail">00:00:00</div>
-        <div class="record" id="record">RECORDE: 51 DIAS</div>
+        <div class="record" id="record">RECORDE: 0 DIAS</div>
         <button onclick="resetTimer()" class="animate__animated animate__pulse animate__infinite">REGISTRAR ACIDENTE</button>
         <div class="history">
             <div class="history-title">Histórico de Períodos Sem Acidentes</div>
@@ -170,21 +171,15 @@
     </div>
 
     <script>
-        // Define o recorde e o número atual de dias
-        let record = 51;
-        
-        // Calcula a data de início (16 dias atrás)
-        const startDate = new Date();
-        startDate.setDate(startDate.getDate() - 16);
-        
-        // Inicializa o histórico
-        let history = [
-            {
-                start: startDate.toISOString(),
-                end: null,
-                days: 16
-            }
-        ];
+        // Inicialização das variáveis globais
+        let startDate = new Date();
+        startDate.setDate(startDate.getDate() - 3); // Começa com 3 dias e continua contando
+        let record = 0;
+        let history = [{
+            start: startDate.toISOString(),
+            end: null,
+            days: 3
+        }];
 
         function padNumber(num) {
             return num.toString().padStart(2, '0');
@@ -194,7 +189,7 @@
             const now = new Date();
             const diffTime = Math.abs(now - startDate);
             
-            // Cálculo dos dias
+            // Cálculo dos dias (agora continua contando a partir dos 3 dias)
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             
             // Cálculo das horas, minutos e segundos restantes
@@ -218,7 +213,7 @@
             document.getElementById('record').textContent = `RECORDE: ${record} DIAS`;
 
             // Atualiza o número de dias no histórico atual
-            if (history[0].end === null) {
+            if (history[0] && history[0].end === null) {
                 history[0].days = diffDays;
             }
         }
@@ -229,10 +224,12 @@
                 const daysWithoutAccident = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
                 
                 // Atualiza o último período
-                history[0].end = endDate.toISOString();
-                history[0].days = daysWithoutAccident;
+                if (history[0]) {
+                    history[0].end = endDate.toISOString();
+                    history[0].days = daysWithoutAccident;
+                }
                 
-                // Adiciona novo período
+                // Adiciona novo período com contagem zerada
                 history.unshift({
                     start: endDate.toISOString(),
                     end: null,
@@ -247,8 +244,12 @@
                 // Mantém apenas os últimos 10 registros
                 history = history.slice(0, 10);
                 
-                // Atualiza a data de início para agora
-                startDate.setTime(endDate.getTime());
+                // Atualiza a data de início para agora (zera a contagem)
+                startDate = new Date(); // Zera e começa a contar do zero
+                
+                // Força atualização imediata do display
+                document.getElementById('timer').textContent = '0';
+                document.getElementById('timer-detail').textContent = '00:00:00';
                 
                 updateTimer();
                 updateHistory();
